@@ -2,19 +2,19 @@ import java.util.ArrayList;
 
 public class MatchedLoan {
 	Loan loan;
-	ArrayList<Investment> investors;
+	ArrayList<Investment> investments;
 	
-	public MatchedLoan(Loan loan, ArrayList<Investment> investors) {
+	public MatchedLoan(Loan loan, ArrayList<Investment> investments) {
 		super();
 		this.loan = loan;
-		this.investors = investors;
+		this.investments = investments;
 	}
 
 	public Loan getLoan() {
 		return loan;
 	}
 
-	public ArrayList<Investment> getInvestors() {
-		return investors;
+	public ArrayList<Investment> getInvestments() {
+		return investments;
 	}
 }

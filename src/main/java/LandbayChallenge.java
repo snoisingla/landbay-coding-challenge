@@ -16,7 +16,7 @@ public class LandbayChallenge{
 		try{
 			File inputFile = new File(fileName);
 			BufferedReader reader = new BufferedReader(new FileReader(inputFile));
-			reader.readLine(); //to skip first line
+			reader.readLine(); //ignore first line
 
 			String s;
 	     	while ((s = reader.readLine()) != null) {
