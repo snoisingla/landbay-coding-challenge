@@ -5,6 +5,7 @@ public class LoanMatcher {
 	
 	public ArrayList<MatchedLoan> matchLoans(ArrayList<Loan> loans, ArrayList<Investment> investments) {
 		Collections.sort(loans, (Loan a, Loan b) -> (a.getCompletedDate().compareTo(b.getCompletedDate())));
+		Collections.sort(investments, (Investment a, Investment b) -> a.getTerm() - b.getTerm());
 		ArrayList<MatchedLoan> matchedLoans = new ArrayList<>();
 		for(Loan loan : loans) {
 			MatchedLoan r = matchLoan(loan, investments);
@@ -13,15 +14,10 @@ public class LoanMatcher {
 		return matchedLoans;
 	}
 	
-	private ArrayList<Investment> filterAndSortInvestments(Loan loan, ArrayList<Investment> investmentList){
-		return investmentList.stream()
-				.filter(investment -> investment.isFulfillingLoanRequirements(loan))
-				.sorted((Investment a, Investment b) -> a.getTerm() - b.getTerm()) //sort by investment term
-				.collect(Collectors.toCollection(ArrayList::new));
-	}
-	
 	private MatchedLoan matchLoan(Loan loan, ArrayList<Investment> investmentsList) {
-		ArrayList<Investment> eligibleSortedInvestments = filterAndSortInvestments(loan, investmentsList);
+		ArrayList<Investment> eligibleSortedInvestments = investmentsList.stream()
+				.filter(investment -> investment.isFulfillingLoanRequirements(loan))
+				.collect(Collectors.toCollection(ArrayList::new));
 		
 		ArrayList<Investment> matchedInvestments = new ArrayList<>();
 		int loanAmount = loan.getAmount();
@@ -34,11 +30,11 @@ public class LoanMatcher {
 			if (fulfilledAmount == loanAmount) {
 				//loan has been fulfilled	
 				MatchedLoan result = new MatchedLoan(loan, matchedInvestments);				
-				investment.setAmount(investment.getAmount() - fulfilledAmount); //loan 50, investment 70 or both equal
+				investment.setAmount(investment.getAmount() - fulfilledAmount); //eg ->loan 50, investment 70 or both equal
 				return result;
 			}
 			//loan is not fulfilled, move to next investor	
-			loanAmount = loanAmount - fulfilledAmount;
+			loanAmount = loanAmount - fulfilledAmount; //eg -> loan 50, investment 20
 			investmentsList.remove(investment); //fulfilled investment
 		}
 		return null;
